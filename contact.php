@@ -25,14 +25,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $feedback = "You must acknowledge the compliance checkbox regarding the advocate-client relationship before submitting.";
         $feedback_type = "error";
     } else {
+        // Save enquiry with Vercel serverless write fallback
         $dataDir = __DIR__ . '/data';
         if (!is_dir($dataDir)) {
-            mkdir($dataDir, 0777, true);
+            @mkdir($dataDir, 0777, true);
         }
-        $dataFile = $dataDir . '/enquiries.json';
+        $dataFile = is_writable($dataDir) || !file_exists($dataFile = $dataDir . '/enquiries.json') ? $dataDir . '/enquiries.json' : sys_get_temp_dir() . '/enquiries.json';
         $existing = [];
         if (file_exists($dataFile)) {
-            $json = file_get_contents($dataFile);
+            $json = @file_get_contents($dataFile);
             $existing = json_decode($json, true) ?: [];
         }
         $existing[] = [
@@ -46,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'subject_overview' => $subject_overview,
             'ip' => $_SERVER['REMOTE_ADDR'] ?? 'UNKNOWN'
         ];
-        file_put_contents($dataFile, json_encode($existing, JSON_PRETTY_PRINT));
+        @file_put_contents($dataFile, json_encode($existing, JSON_PRETTY_PRINT));
 
         $feedback = "Thank you, " . htmlspecialchars($full_name) . ". Your enquiry has been submitted. Our office will contact you shortly.";
         $feedback_type = "success";
