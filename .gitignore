@@ -1,0 +1,5 @@
+# Development and logs
+.system_generated/
+*.log
+.DS_Store
+Thumbs.db
