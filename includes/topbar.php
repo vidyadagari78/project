@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/config.php';
+$is_home = basename($_SERVER['PHP_SELF']) === 'index.php';
 ?>
 <header class="top-nav-bar">
     <div style="display:flex; align-items:center; gap:16px;">
@@ -16,7 +17,8 @@ require_once __DIR__ . '/config.php';
         </div>
     </div>
 
-    <!-- Top Horizontal Links (As shown across pages in the mockup) -->
+    <!-- Top Horizontal Links (As shown on Pages 2-6 in the mockup) -->
+    <?php if (!$is_home): ?>
     <ul class="top-menu-links">
         <li><a href="about.php" class="<?php echo is_active_page('about.php'); ?>">ABOUT US</a></li>
         <li><a href="practice-areas.php" class="<?php echo is_active_page('practice-areas.php'); ?>">PRACTICE AREAS</a></li>
@@ -24,4 +26,5 @@ require_once __DIR__ . '/config.php';
         <li><a href="courts.php" class="<?php echo is_active_page('courts.php'); ?>">COURTS &amp; FORUMS</a></li>
         <li><a href="contact.php" class="<?php echo is_active_page('contact.php'); ?>">CONTACT</a></li>
     </ul>
+    <?php endif; ?>
 </header>
